@@ -18,7 +18,8 @@ const (
 )
 
 var settings = map[string]string{
-	"config_path":       "./runner.conf",
+	"config_path":             "./runner.conf",
+	"alternative_config_path": "./.runner.conf",
 	"root":              ".",
 	"tmp_path":          "./tmp",
 	"build_name":        "runner-build",
@@ -166,6 +167,10 @@ func buildErrorsFilePath() string {
 }
 
 func configPath() string {
+	if _, err := os.Stat(settings["config_path"]); err != nil {
+		return settings["alternative_config_path"]
+	}
+
 	return settings["config_path"]
 }
 
