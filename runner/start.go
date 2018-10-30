@@ -54,7 +54,19 @@ func start() {
 				mainLog(err.Error())
 			}
 
-			errorMessage, ok := build()
+			prebuildcmds := preBuildCmd()
+			if len(prebuildcmds) > 0 {
+				errorMessage, ok := build(prebuildcmds...)
+				if !ok {
+					mainLog("Pre build failed: \n %s", errorMessage)
+					if !started {
+						os.Exit(1)
+					}
+					createBuildErrorsLog(errorMessage)
+				}
+			}
+
+			errorMessage, ok := build("go", "build", "-o", buildPath(), root())
 			if !ok {
 				mainLog("Build Failed: \n %s", errorMessage)
 				if !started {

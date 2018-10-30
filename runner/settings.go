@@ -131,6 +131,14 @@ func argName() string {
 	return settings["args"]
 }
 
+func preBuildCmd() (ret []string) {
+	if settings["prebuild_cmd"] != "" {
+		return strings.Split(settings["prebuild_cmd"], " ")
+	}
+
+	return
+}
+
 func buildPath() string {
 	p := filepath.Join(tmpPath(), buildName())
 	if runtime.GOOS == "windows" && filepath.Ext(p) != ".exe" {
